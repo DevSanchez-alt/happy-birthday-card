@@ -26,19 +26,23 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
-    height: 100%;
-    overflow: hidden;
+    min-height: 100%;
     font-family: 'Quicksand', system-ui, sans-serif;
     color: var(--ink);
   }
+  html { overflow-x: hidden; }
+  body { overflow-x: hidden; }
 
   body {
     background:
       radial-gradient(1200px 800px at 15% 10%, var(--rose-100) 0%, transparent 60%),
       radial-gradient(1000px 700px at 85% 90%, var(--lav-100) 0%, transparent 55%),
       linear-gradient(135deg, #fff7fb 0%, #f4ecff 100%);
+    background-attachment: fixed;
     display: grid;
     place-items: center;
+    min-height: 100vh;
+    padding: 24px 0;
     perspective: 1500px;
   }
 
@@ -229,7 +233,6 @@
     position: relative;
     z-index: 20;
     width: min(92vw, 520px);
-    aspect-ratio: 3 / 4;
     background:
       radial-gradient(circle at 80% 0%, #ffe4ec 0%, transparent 50%),
       radial-gradient(circle at 0% 100%, #efe5ff 0%, transparent 50%),
@@ -340,18 +343,22 @@
   }
   .wish .ico { font-size: 22px; }
   .card .signature {
-    margin-top: 20px;
+    margin-top: 18px;
     font-family: 'Dancing Script', cursive;
-    font-size: 22px;
+    font-size: clamp(18px, 5vw, 22px);
     color: #c2477a;
+    line-height: 1.2;
+    word-break: break-word;
   }
   .card .date {
-    margin-top: 6px;
+    margin-top: 8px;
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
     color: var(--ink-soft);
-    font-size: 12px;
-    letter-spacing: 0.1em;
+    font-size: clamp(10px, 2.8vw, 12px);
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    word-break: break-word;
   }
 
   /* Cake animation */
@@ -447,10 +454,37 @@
   .replay.show { display: inline-flex; align-items: center; gap: 6px; }
   .replay:hover { background: #fff; }
 
-  @media (max-width: 420px) {
-    .letter { padding: 16px 18px; }
-    .card { padding: 28px 20px; }
-    .card .wishes { gap: 6px; }
+  @media (max-width: 480px) {
+    body { padding: 16px 0; }
+    .letter { padding: 14px 16px; }
+    .card { padding: 26px 18px 30px; }
+    .card .wishes {
+      gap: 6px;
+      max-width: 100%;
+    }
+    .card .wish {
+      padding: 10px 4px;
+      font-size: 11px;
+    }
+    .card .wish .ico { font-size: 18px; }
+    .card .message { max-width: 100%; }
+    .card::after { top: 8px; }
+    .replay {
+      bottom: 14px; right: 14px;
+      font-size: 12px; padding: 7px 12px;
+    }
+    #music-toggle {
+      bottom: 14px !important; left: 14px !important;
+      font-size: 12px !important; padding: 7px 12px !important;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .card { padding: 22px 14px 26px; }
+    .card .wishes { grid-template-columns: 1fr 1fr; }
+    .card .wishes .wish:nth-child(3) {
+      grid-column: 1 / -1;
+    }
   }
 </style>
 </head>
