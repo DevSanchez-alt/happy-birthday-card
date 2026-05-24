@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Feliz Cumpleaños, Suleyma </title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Dancing+Script:wght@500;700&family=Quicksand:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --rose-50:  #fff5f7;
+    --rose-100: #ffe4ec;
+    --rose-200: #ffc9da;
+    --rose-300: #ffa3c0;
+    --rose-400: #ff7aa6;
+    --lav-100:  #efe5ff;
+    --lav-200:  #d9c4ff;
+    --lav-400:  #a98bff;
+    --cream:    #fff8f0;
+    --ink:      #5b3a4a;
+    --ink-soft: #8a6577;
+    --gold:     #d4a574;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Quicksand', system-ui, sans-serif;
+    color: var(--ink);
+  }
+
+  body {
+    background:
+      radial-gradient(1200px 800px at 15% 10%, var(--rose-100) 0%, transparent 60%),
+      radial-gradient(1000px 700px at 85% 90%, var(--lav-100) 0%, transparent 55%),
+      linear-gradient(135deg, #fff7fb 0%, #f4ecff 100%);
+    display: grid;
+    place-items: center;
+    perspective: 1500px;
+  }
+
+  /* Floating decorations */
+  .petals { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+  .petal {
+    position: absolute;
+    top: -10vh;
+    font-size: 20px;
+    opacity: 0.7;
+    animation: fall linear infinite;
+    user-select: none;
+  }
+  @keyframes fall {
+    0%   { transform: translate(0, -10vh) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 0.9; }
+    100% { transform: translate(40px, 110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ====== Envelope ====== */
+  .stage {
+    position: relative;
+    width: min(92vw, 460px);
+    aspect-ratio: 3 / 2;
+    z-index: 2;
+    transform-style: preserve-3d;
+    transition: transform 1.2s cubic-bezier(.7,.1,.2,1);
+  }
+  .stage.opened { transform: translateY(-30px); }
+
+  .envelope {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: linear-gradient(160deg, #ffd6e3 0%, #ffc1d6 50%, #f3b6df 100%);
+    box-shadow:
+      0 30px 60px -20px rgba(190, 100, 140, 0.35),
+      0 10px 30px -10px rgba(170, 130, 200, 0.25),
+      inset 0 0 0 1px rgba(255,255,255,0.5);
+    overflow: hidden;
+  }
+
+  .envelope::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.35) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(255,255,255,0.25) 0%, transparent 45%);
+    pointer-events: none;
+  }
+
+  .envelope-body {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+  }
+
+  .seal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ff9bbf 0%, #d4477a 65%, #a82e5d 100%);
+    box-shadow:
+      0 6px 18px rgba(160, 40, 90, 0.4),
+      inset 0 -4px 8px rgba(0,0,0,0.15),
+      inset 0 4px 6px rgba(255,255,255,0.4);
+    display: grid;
+    place-items: center;
+    z-index: 12;
+    cursor: pointer;
+    transition: transform .5s ease, opacity .4s ease;
+    font-family: 'Dancing Script', cursive;
+    color: #fff7fb;
+    font-size: 28px;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  }
+  .seal:hover { transform: translate(-50%, -50%) scale(1.05); }
+  .stage.opened .seal { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+
+  .flap {
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 50%;
+    background: linear-gradient(180deg, #ffc1d6 0%, #f3a8c6 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top;
+    transition: transform 1s ease;
+    z-index: 11;
+    box-shadow: 0 2px 6px rgba(160, 80, 120, 0.15);
+  }
+  .stage.opened .flap { transform: rotateX(180deg); z-index: 5; }
+
+  .pocket-front {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 50%;
+    background: linear-gradient(180deg, #ffb6d2 0%, #ec9bc1 100%);
+    clip-path: polygon(0 100%, 100% 100%, 100% 0, 50% 60%, 0 0);
+    z-index: 10;
+  }
+
+  /* ====== Letter ====== */
+  .letter {
+    position: absolute;
+    left: 4%; right: 4%;
+    top: 8%;
+    height: 84%;
+    background: linear-gradient(180deg, var(--cream) 0%, #fff 100%);
+    border-radius: 10px;
+    box-shadow:
+      0 18px 40px -10px rgba(150, 80, 120, 0.35),
+      0 0 0 1px rgba(212,165,116,0.2),
+      inset 0 0 30px rgba(255, 230, 240, 0.4);
+    padding: 22px 26px;
+    z-index: 8;
+    transform: translateY(0);
+    transition: transform 1.2s cubic-bezier(.7,.1,.2,1) .3s;
+    overflow: hidden;
+    background-image:
+      linear-gradient(180deg, var(--cream) 0%, #fff 100%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><circle cx='20' cy='20' r='0.6' fill='%23d4a574' opacity='0.25'/></svg>");
+    background-blend-mode: multiply;
+  }
+  .stage.opened .letter { transform: translateY(-180%); }
+
+  .letter::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(212,165,116,0.35);
+    border-radius: 6px;
+    pointer-events: none;
+  }
+
+  .letter h1 {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    font-size: clamp(22px, 5vw, 30px);
+    color: #c2477a;
+    text-align: center;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .letter .sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+  .letter .divider {
+    display: flex; align-items: center; gap: 8px;
+    margin: 10px 0 8px;
+    color: var(--gold);
+    font-size: 12px;
+  }
+  .letter .divider::before, .letter .divider::after {
+    content: ""; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212,165,116,0.5), transparent);
+  }
+  .letter p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(13px, 3.4vw, 15px);
+    line-height: 1.55;
+    color: var(--ink);
+    text-align: center;
+  }
+  .letter .sign {
+    margin-top: 8px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 18px;
+    text-align: right;
+    color: #c2477a;
+  }
+
+  /* ====== Open card (the real reveal) ====== */
+  .card {
+    position: relative;
+    z-index: 20;
+    width: min(92vw, 520px);
+    aspect-ratio: 3 / 4;
+    background:
+      radial-gradient(circle at 80% 0%, #ffe4ec 0%, transparent 50%),
+      radial-gradient(circle at 0% 100%, #efe5ff 0%, transparent 50%),
+      linear-gradient(180deg, #ffffff 0%, #fff8fb 100%);
+    border-radius: 18px;
+    box-shadow:
+      0 40px 80px -20px rgba(190, 100, 140, 0.45),
+      0 10px 30px -10px rgba(170, 130, 200, 0.3),
+      inset 0 0 0 1px rgba(255,255,255,0.7);
+    padding: 36px 28px;
+    text-align: center;
+    display: none;
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1);
+    overflow: hidden;
+  }
+  .card.show { display: block; }
+  .card.in   { opacity: 1; transform: translateY(0) scale(1); }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(212, 165, 116, 0.35);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+  .card::after {
+    content: "❀";
+    position: absolute;
+    top: 10px; left: 50%;
+    transform: translateX(-50%);
+    color: rgba(212,165,116,0.5);
+    font-size: 16px;
+  }
+
+  .card .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+  .card h2 {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    font-size: clamp(34px, 9vw, 56px);
+    line-height: 1;
+    background: linear-gradient(135deg, #ff5c95 0%, #c2477a 50%, #a98bff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 6px;
+  }
+  .card .name {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(40px, 11vw, 68px);
+    line-height: 1;
+    color: #c2477a;
+    margin-bottom: 14px;
+    text-shadow: 0 2px 0 rgba(255,255,255,0.7);
+  }
+  .card .ornament {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; margin: 10px auto 16px;
+    color: var(--gold);
+    font-size: 14px;
+  }
+  .card .ornament::before, .card .ornament::after {
+    content: ""; width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .card .message {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(15px, 3.8vw, 17px);
+    line-height: 1.65;
+    color: var(--ink);
+    max-width: 38ch;
+    margin: 0 auto 12px;
+  }
+  .card .message em {
+    color: #c2477a;
+    font-style: italic;
+  }
+  .card .wishes {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 360px;
+    margin-left: auto; margin-right: auto;
+  }
+  .wish {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,200,220,0.6);
+    border-radius: 12px;
+    padding: 12px 6px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    color: var(--ink);
+    display: grid;
+    gap: 4px;
+    place-items: center;
+  }
+  .wish .ico { font-size: 22px; }
+  .card .signature {
+    margin-top: 20px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 22px;
+    color: #c2477a;
+  }
+  .card .date {
+    margin-top: 6px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  /* Cake animation */
+  .cake-wrap {
+    position: relative;
+    height: 70px;
+    margin: 6px auto 4px;
+  }
+  .cake {
+    position: relative;
+    width: 90px; height: 50px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #ffd6e3 0%, #ffb6d2 100%);
+    border-radius: 8px 8px 4px 4px;
+    box-shadow: inset 0 -6px 0 #ec9bc1, 0 4px 10px rgba(190,100,140,0.25);
+  }
+  .cake::before {
+    content: "";
+    position: absolute;
+    top: -8px; left: 5%; right: 5%;
+    height: 14px;
+    background:
+      radial-gradient(circle at 10% 50%, #fff 0 5px, transparent 6px) repeat-x,
+      linear-gradient(180deg, #fff8f0, #ffe4ec);
+    background-size: 18px 14px;
+    border-radius: 6px;
+  }
+  .candle {
+    position: absolute;
+    top: -22px; left: 50%; transform: translateX(-50%);
+    width: 6px; height: 18px;
+    background: linear-gradient(180deg, #ffe4ec 0%, #ffb6d2 100%);
+    border-radius: 2px;
+  }
+  .flame {
+    position: absolute;
+    top: -10px; left: 50%; transform: translateX(-50%);
+    width: 8px; height: 12px;
+    background: radial-gradient(ellipse at center, #fff5a0 0%, #ffb347 60%, transparent 70%);
+    border-radius: 50% 50% 35% 35%;
+    animation: flicker 0.6s ease-in-out infinite alternate;
+    filter: blur(0.3px);
+  }
+  @keyframes flicker {
+    from { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 0.95; }
+    to   { transform: translateX(-50%) scale(1.15) rotate(2deg); opacity: 1; }
+  }
+
+  /* Confetti */
+  .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 50; }
+  .confetto {
+    position: absolute;
+    top: -10vh;
+    width: 8px; height: 14px;
+    opacity: 0;
+    animation: confettiFall 2.8s linear forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translate(0, -10vh) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--dx), 110vh) rotate(720deg); opacity: 0.9; }
+  }
+
+  .hint {
+    position: absolute;
+    bottom: -42px; left: 50%; transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    animation: bob 2s ease-in-out infinite;
+  }
+  .stage.opened .hint { display: none; }
+  @keyframes bob { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 4px); } }
+
+  .replay {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,200,220,0.7);
+    color: #c2477a;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(190, 100, 140, 0.2);
+    z-index: 60;
+    display: none;
+  }
+  .replay.show { display: inline-flex; align-items: center; gap: 6px; }
+  .replay:hover { background: #fff; }
+
+  @media (max-width: 420px) {
+    .letter { padding: 16px 18px; }
+    .card { padding: 28px 20px; }
+    .card .wishes { gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="petals" id="petals" aria-hidden="true"></div>
+
+<div class="stage" id="stage" role="button" tabindex="0" aria-label="Abrir tarjeta de cumpleaños">
+  <div class="envelope">
+    <div class="letter" id="letter">
+      <h1>Una sorpresa para ti</h1>
+      <div class="sub">— con todo mi cariño —</div>
+      <div class="divider">✦</div>
+      <p>
+        Esta cartita guarda algo especial<br/>
+        que solo tú puedes abrir.<br/>
+        <br/>
+        Haz clic en el sello rosa…<br/>
+        <em style="color:#c2477a; font-family:'Dancing Script', cursive; font-size: 22px;">y deja que la magia comience.</em>
+      </p>
+      <div class="sign">— para Suleyma</div>
+    </div>
+    <div class="pocket-front"></div>
+    <div class="flap"></div>
+    <div class="seal" id="seal" title="Abrir">S</div>
+  </div>
+  <div class="hint">↑ haz clic en el sello para abrir ↑</div>
+</div>
+
+<div class="card" id="card" aria-live="polite">
+  <div class="eyebrow">— Hoy es tu día —</div>
+  <h2>Feliz Cumpleaños</h2>
+  <div class="name">Suleyma</div>
+
+  <div class="cake-wrap" aria-hidden="true">
+    <div class="cake">
+      <div class="candle">
+        <div class="flame"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ornament">✿</div>
+
+  <p class="message">
+    Que este nuevo año traiga consigo <em>todas las cosas bonitas</em>
+    que mereces: risas que no se acaben, abrazos que reconforten,
+    sueños que se cumplan y momentos que se queden para siempre
+    en tu corazón.
+  </p>
+  <p class="message">
+    Eres una persona <em>especial</em>, y hoy se celebra
+    eso — que existas, que ilumines, que seas tú.
+  </p>
+
+  <div class="wishes">
+    <div class="wish"><span class="ico">✿</span><span>Mucho amor</span></div>
+    <div class="wish"><span class="ico">✦</span><span>Sueños grandes</span></div>
+    <div class="wish"><span class="ico">❀</span><span>Sonrisas eternas</span></div>
+  </div>
+
+  <div class="signature">Con todo mi cariño ♡</div>
+  <div class="date">— UN DÍA INOLVIDABLE —</div>
+</div>
+
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+
+<button class="replay" id="replay" type="button">↻ volver a abrir</button>
+
+<script>
+  // ===== Petals (background) =====
+  const petalChars = ["✿","❀","✦","♡","✧"];
+  const petalsEl = document.getElementById('petals');
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('span');
+    s.className = 'petal';
+    s.textContent = petalChars[i % petalChars.length];
+    const left = Math.random() * 100;
+    const dur  = 9 + Math.random() * 10;
+    const delay = -Math.random() * 12;
+    const size = 14 + Math.random() * 18;
+    const hue  = Math.random() < 0.5 ? '#ff9bbf' : '#c8a8ff';
+    s.style.left = left + 'vw';
+    s.style.animationDuration  = dur + 's';
+    s.style.animationDelay = delay + 's';
+    s.style.fontSize = size + 'px';
+    s.style.color = hue;
+    petalsEl.appendChild(s);
+  }
+
+  // ===== Open the card =====
+  const stage   = document.getElementById('stage');
+  const card    = document.getElementById('card');
+  const replay  = document.getElementById('replay');
+  const seal    = document.getElementById('seal');
+  const confettiEl = document.getElementById('confetti');
+
+  let opened = false;
+
+  function shootConfetti() {
+    const colors = ['#ff7aa6', '#ffc1d6', '#a98bff', '#d4a574', '#fff5a0', '#ff9bbf'];
+    for (let i = 0; i < 80; i++) {
+      const c = document.createElement('span');
+      c.className = 'confetto';
+      c.style.left = (Math.random() * 100) + 'vw';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.setProperty('--dx', (Math.random() * 200 - 100) + 'px');
+      c.style.animationDelay = (Math.random() * 0.6) + 's';
+      c.style.borderRadius = Math.random() < 0.4 ? '50%' : '2px';
+      c.style.transform = `rotate(${Math.random() * 360}deg)`;
+      confettiEl.appendChild(c);
+      setTimeout(() => c.remove(), 3500);
+    }
+  }
+
+  function openCard() {
+    if (opened) return;
+    opened = true;
+    stage.classList.add('opened');
+
+    setTimeout(() => {
+      stage.style.display = 'none';
+      card.classList.add('show');
+      requestAnimationFrame(() => card.classList.add('in'));
+      shootConfetti();
+      setTimeout(() => replay.classList.add('show'), 1200);
+    }, 1200);
+  }
+
+  function resetCard() {
+    opened = false;
+    card.classList.remove('in');
+    setTimeout(() => {
+      card.classList.remove('show');
+      stage.style.display = '';
+      stage.classList.remove('opened');
+      replay.classList.remove('show');
+    }, 400);
+  }
+
+  stage.addEventListener('click', openCard);
+  stage.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCard(); }
+  });
+  seal.addEventListener('click', (e) => { e.stopPropagation(); openCard(); });
+  replay.addEventListener('click', resetCard);
+</script>
+</body>
+</html>
