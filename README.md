@@ -12,6 +12,8 @@ Abre `index.html` en tu navegador, o visita la versión publicada en GitHub Page
 - Confetti al abrir la tarjeta
 - Pétalos cayendo de fondo
 - Velita con llama animada
+- Música de fondo (se activa al abrir la tarjeta)
+- Botón para pausar / reanudar la música
 - Diseño responsive (se ve bien en móvil y escritorio)
 - Tipografía elegante (Cormorant Garamond + Dancing Script)
 

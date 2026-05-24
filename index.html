@@ -458,6 +458,21 @@
 
 <div class="petals" id="petals" aria-hidden="true"></div>
 
+<!-- Reproductor de YouTube oculto (música de fondo) -->
+<div id="yt-player" style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px; opacity:0; pointer-events:none;" aria-hidden="true"></div>
+
+<!-- Botón de control de música -->
+<button id="music-toggle" type="button" title="Pausar / reanudar música"
+  style="position:fixed; bottom:20px; left:20px; z-index:60;
+         background:rgba(255,255,255,0.85); backdrop-filter:blur(8px);
+         border:1px solid rgba(255,200,220,0.7); color:#c2477a;
+         font-family:'Quicksand',sans-serif; font-size:13px;
+         padding:8px 14px; border-radius:999px; cursor:pointer;
+         box-shadow:0 6px 16px rgba(190,100,140,0.2); display:none;
+         align-items:center; gap:6px;">
+  <span id="music-icon">♪</span> <span id="music-label">música</span>
+</button>
+
 <div class="stage" id="stage" role="button" tabindex="0" aria-label="Abrir tarjeta de cumpleaños">
   <div class="envelope">
     <div class="letter" id="letter">
@@ -550,6 +565,62 @@
 
   let opened = false;
 
+  // ===== YouTube background music =====
+  // Video: https://www.youtube.com/watch?v=1DyVoLo4jIA  (empieza en 0:25)
+  const YT_VIDEO_ID = '1DyVoLo4jIA';
+  const YT_START    = 25;
+  let ytPlayer = null;
+  let ytReady  = false;
+  let musicOn  = true;
+
+  // Cargar la API de YouTube IFrame
+  (function loadYT() {
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  })();
+
+  window.onYouTubeIframeAPIReady = function () {
+    ytPlayer = new YT.Player('yt-player', {
+      videoId: YT_VIDEO_ID,
+      playerVars: {
+        autoplay: 0,
+        controls: 0,
+        start: YT_START,
+        playsinline: 1,
+        rel: 0,
+        modestbranding: 1,
+      },
+      events: {
+        onReady: () => { ytReady = true; },
+      },
+    });
+  };
+
+  function startMusic() {
+    if (!ytReady || !ytPlayer) return;
+    try {
+      ytPlayer.unMute && ytPlayer.unMute();
+      ytPlayer.setVolume && ytPlayer.setVolume(70);
+      ytPlayer.playVideo();
+      document.getElementById('music-toggle').style.display = 'inline-flex';
+    } catch (e) { /* noop */ }
+  }
+
+  document.getElementById('music-toggle').addEventListener('click', () => {
+    if (!ytPlayer) return;
+    musicOn = !musicOn;
+    if (musicOn) {
+      ytPlayer.playVideo();
+      document.getElementById('music-icon').textContent = '♪';
+      document.getElementById('music-label').textContent = 'música';
+    } else {
+      ytPlayer.pauseVideo();
+      document.getElementById('music-icon').textContent = '♪';
+      document.getElementById('music-label').textContent = 'silencio';
+    }
+  });
+
   function shootConfetti() {
     const colors = ['#ff7aa6', '#ffc1d6', '#a98bff', '#d4a574', '#fff5a0', '#ff9bbf'];
     for (let i = 0; i < 80; i++) {
@@ -570,6 +641,7 @@
     if (opened) return;
     opened = true;
     stage.classList.add('opened');
+    startMusic();
 
     setTimeout(() => {
       stage.style.display = 'none';
